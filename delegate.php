@@ -38,7 +38,7 @@ foreach ($header as $k=>$v)
     $resp_headers[$v[0]]=$v[1];
 }
 
-$af_2fa_token = $resp_headers("x-app-autentifactor");
+$af_2fa_token = $resp_headers["x-app-autentifactor"];
 
 // Proceed to otc_validate
 curl_close($ch);
