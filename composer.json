@@ -1,0 +1,6 @@
+{
+    "name": "autentifactor/php_sdk",
+    "require": {
+        "guzzlehttp/guzzle": "^6.0"
+    }
+}
