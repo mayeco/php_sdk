@@ -1,11 +1,11 @@
 <?php
-require 'vendor/autoload.php';
+
+namespace Autentifactor;
 
 /**
  * autentifactor
  */
-
-class autentifactor {
+class AutentifactorCurl {
 
     /**
      * Obtener el token_2fa del usuario
@@ -15,25 +15,24 @@ class autentifactor {
         return $_SESSION["user"]["token_2fa"];
     }
 
-
     /**
      * Autenticacion de OTC
      * @return <bool>
-     */    
+     */
     public static function validateOtc($code, $request_token) {
 
         $data = array("code" => $code);
         $data_string = json_encode($data);
 
-        
+
         $API_HOST = "https://demo.autentifactor.com";
         $ch = curl_init($API_HOST . "/api/v1/users/otc");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1); 
+        curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                             
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
@@ -52,18 +51,18 @@ class autentifactor {
             $v=explode(': ', $v, 2);
             $resp_headers[$v[0]]=$v[1];
         }
-        
+
         $auth_token = $resp_headers["x-app-autentifactor-bearer"];
-        
+
         if ($auth_token == null) {
             return false;
         } else {
             $_SESSION["user"]["token_2fa"] = $auth_token;
             return true;
         }
-                
+
         curl_close($ch);
-        
+
     }
     /**
      * Delega autenticacion
@@ -79,10 +78,10 @@ class autentifactor {
         $ch = curl_init($API_HOST . "/api/v2/users/delegate");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1); 
+        curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                             
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
@@ -104,7 +103,7 @@ class autentifactor {
         $af_2fa_token = $resp_headers["x-app-autentifactor"];
         // Proceed to otc_validate
         curl_close($ch);
-        
+
         return $af_2fa_token;
     }
 
@@ -113,7 +112,7 @@ class autentifactor {
      * @return <string>
      */
     public static function authenticate($u, $p){
-        
+
         $data = array("email" => $u, "password" => $p);
         $data_string = json_encode($data);
 
@@ -121,10 +120,10 @@ class autentifactor {
         $ch = curl_init($API_HOST . "/api/v1/users/authenticate");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1); 
+        curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                             
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
@@ -145,10 +144,8 @@ class autentifactor {
         $af_2fa_token = $resp_headers["x-app-autentifactor"];
         // Proceed to otc_validate
         curl_close($ch);
-        
-        return $af_2fa_token;
-    }    
-    
-}
 
-?>
+        return $af_2fa_token;
+    }
+
+}

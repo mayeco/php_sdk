@@ -1,10 +1,11 @@
-<!-- READ http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/-->
 <?php
 
-require __DIR__ . '/lib/autentifactor_guzzle.php';
+// READ http://unitstep.net/blog/2009/05/05/using-curl-in-php-to-access-https-ssltls-protected-sites/
 
-$u = $_POST["username"];
-$p = $_POST["password"];
+require __DIR__ . '/vendor/autoload.php';
+
+$u = $POST_["user"];
+$p = $POST_["password"];
 
 header("Content-type:application/json");
 
@@ -20,10 +21,8 @@ if ($p == NULL)  {
     return;
 }
 
-    $af_client = new autentifactor('http://localhost/api');
-    // $token = $af_client->authenticate($u, $p);
-    $token = $af_client->delegate($u);
+$af_client = new \Autentifactor\Autentifactor('http://localhost', "MY_TOKEN");
+// $token = $af_client->authenticate($u, $p);
+$token = $af_client->delegate($u);
 
-    echo json_encode(array("token" => $token));
-    return;
-?>
+echo json_encode(array("token" => $token));
